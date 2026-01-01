@@ -5,15 +5,19 @@ public class Main {
         TaskManager manager = new TaskManager();
 
         // Criando tarefas
-        Task t1 = new Task(1, "Configurar CI", "Criar pipeline no GitHub Actions");
-        Task t2 = new Task(2, "Implementar CRUD", "Criar operações básicas de tarefas");
+        manager.addTask(new Task(1, "Configurar CI", "Criar pipeline no GitHub Actions"));
+        manager.addTask(new Task(2, "Implementar CRUD", "Criar operações básicas"));
 
-        manager.addTask(t1);
-        manager.addTask(t2);
-
-        // Listando tarefas criadas
+        // READ: listar todas as tarefas
+        System.out.println("=== Lista de Tarefas ===");
         manager.listTasks().forEach(t ->
-                System.out.println("ID: " + t.getId() + " | Título: " + t.getTitle())
+                System.out.println("ID: " + t.getId() + " | Título: " + t.getTitle() + " | Concluída: " + t.isCompleted())
         );
+
+        // READ: buscar tarefa por ID
+        Task encontrada = manager.findTaskById(2);
+        if (encontrada != null) {
+            System.out.println("Tarefa encontrada: " + encontrada.getTitle());
+        }
     }
 }
