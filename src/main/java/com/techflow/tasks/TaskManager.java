@@ -24,7 +24,7 @@ public class TaskManager {
                 .orElse(null);
     }
 
-    // UPDATE: atualiza título, descrição e prioridade
+    // UPDATE
     public boolean updateTask(int id, String newTitle, String newDescription, int newPriority, boolean completed) {
         Task task = findTaskById(id);
         if (task != null) {
@@ -33,6 +33,17 @@ public class TaskManager {
             task.setPriority(newPriority);
             task.setCompleted(completed);
             System.out.println("Tarefa atualizada: " + task.getTitle());
+            return true;
+        }
+        return false;
+    }
+
+    // DELETE: remove tarefa pelo ID
+    public boolean deleteTask(int id) {
+        Task task = findTaskById(id);
+        if (task != null) {
+            tasks.remove(task);
+            System.out.println("Tarefa removida: " + task.getTitle());
             return true;
         }
         return false;

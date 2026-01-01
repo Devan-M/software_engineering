@@ -8,16 +8,18 @@ public class Main {
         manager.addTask(new Task(1, "Configurar CI", "Criar pipeline no GitHub Actions"));
         manager.addTask(new Task(2, "Implementar CRUD", "Criar operações básicas"));
 
-        // Atualizando tarefa
-        boolean atualizado = manager.updateTask(2, "Implementar CRUD completo", "Adicionar Create, Read, Update, Delete", 2, false);
+        // Listando antes da exclusão
+        System.out.println("=== Antes da exclusão ===");
+        manager.listTasks().forEach(t -> System.out.println(t.getId() + " - " + t.getTitle()));
 
-        if (atualizado) {
-            System.out.println("Tarefa 2 atualizada com sucesso!");
+        // Deletando tarefa
+        boolean removida = manager.deleteTask(1);
+        if (removida) {
+            System.out.println("Tarefa 1 removida com sucesso!");
         }
 
-        // Listando tarefas após atualização
-        manager.listTasks().forEach(t ->
-                System.out.println("ID: " + t.getId() + " | Título: " + t.getTitle() + " | Prioridade: " + t.getPriority())
-        );
+        // Listando após exclusão
+        System.out.println("=== Após exclusão ===");
+        manager.listTasks().forEach(t -> System.out.println(t.getId() + " - " + t.getTitle()));
     }
 }
