@@ -2,24 +2,21 @@ package com.techflow.tasks;
 
 public class Main {
     public static void main(String[] args) {
-        TaskManager manager = new TaskManager();
+        LoginService loginService = new LoginService();
 
-        // Criando tarefas
-        manager.addTask(new Task(1, "Configurar CI", "Criar pipeline no GitHub Actions"));
-        manager.addTask(new Task(2, "Implementar CRUD", "Criar operações básicas"));
+        // Registrar usuário
+        loginService.register("admin", "1234");
 
-        // Listando antes da exclusão
-        System.out.println("=== Antes da exclusão ===");
-        manager.listTasks().forEach(t -> System.out.println(t.getId() + " - " + t.getTitle()));
+        // Tentativa de login
+        boolean autenticado = loginService.login("admin", "1234");
 
-        // Deletando tarefa
-        boolean removida = manager.deleteTask(1);
-        if (removida) {
-            System.out.println("Tarefa 1 removida com sucesso!");
+        if (autenticado) {
+            TaskManager manager = new TaskManager();
+            manager.authenticate(true); // habilita CRUD
+
+            // Criar tarefa após login
+            manager.addTask(new Task(1, "Configurar CI", "Criar pipeline no GitHub Actions"));
+            manager.listTasks().forEach(t -> System.out.println("ID: " + t.getId() + " | " + t.getTitle()));
         }
-
-        // Listando após exclusão
-        System.out.println("=== Após exclusão ===");
-        manager.listTasks().forEach(t -> System.out.println(t.getId() + " - " + t.getTitle()));
     }
 }

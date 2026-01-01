@@ -5,11 +5,22 @@ import java.util.List;
 
 public class TaskManager {
     private List<Task> tasks = new ArrayList<>();
+    private boolean authenticated = false; // controle de login
+
+    // Método para autenticar
+    public void authenticate(boolean status) {
+        this.authenticated = status;
+    }
 
     // CREATE
-    public void addTask(Task task) {
+    public boolean addTask(Task task) {
+        if (!authenticated) {
+            System.out.println("Acesso negado! Faça login para criar tarefas.");
+            return false;
+        }
         tasks.add(task);
         System.out.println("Tarefa criada: " + task.getTitle());
+        return true;
     }
 
     // READ
@@ -26,6 +37,10 @@ public class TaskManager {
 
     // UPDATE
     public boolean updateTask(int id, String newTitle, String newDescription, int newPriority, boolean completed) {
+        if (!authenticated) {
+            System.out.println("Acesso negado! Faça login para atualizar tarefas.");
+            return false;
+        }
         Task task = findTaskById(id);
         if (task != null) {
             task.setTitle(newTitle);
@@ -38,8 +53,12 @@ public class TaskManager {
         return false;
     }
 
-    // DELETE: remove tarefa pelo ID
+    // DELETE
     public boolean deleteTask(int id) {
+        if (!authenticated) {
+            System.out.println("Acesso negado! Faça login para excluir tarefas.");
+            return false;
+        }
         Task task = findTaskById(id);
         if (task != null) {
             tasks.remove(task);
