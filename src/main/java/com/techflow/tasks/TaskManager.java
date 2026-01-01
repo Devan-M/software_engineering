@@ -12,16 +12,29 @@ public class TaskManager {
         System.out.println("Tarefa criada: " + task.getTitle());
     }
 
-    // READ: lista todas as tarefas
+    // READ
     public List<Task> listTasks() {
         return tasks;
     }
 
-    // READ: busca tarefa por ID
     public Task findTaskById(int id) {
         return tasks.stream()
                 .filter(t -> t.getId() == id)
                 .findFirst()
                 .orElse(null);
+    }
+
+    // UPDATE: atualiza título, descrição e prioridade
+    public boolean updateTask(int id, String newTitle, String newDescription, int newPriority, boolean completed) {
+        Task task = findTaskById(id);
+        if (task != null) {
+            task.setTitle(newTitle);
+            task.setDescription(newDescription);
+            task.setPriority(newPriority);
+            task.setCompleted(completed);
+            System.out.println("Tarefa atualizada: " + task.getTitle());
+            return true;
+        }
+        return false;
     }
 }

@@ -8,16 +8,16 @@ public class Main {
         manager.addTask(new Task(1, "Configurar CI", "Criar pipeline no GitHub Actions"));
         manager.addTask(new Task(2, "Implementar CRUD", "Criar operações básicas"));
 
-        // READ: listar todas as tarefas
-        System.out.println("=== Lista de Tarefas ===");
-        manager.listTasks().forEach(t ->
-                System.out.println("ID: " + t.getId() + " | Título: " + t.getTitle() + " | Concluída: " + t.isCompleted())
-        );
+        // Atualizando tarefa
+        boolean atualizado = manager.updateTask(2, "Implementar CRUD completo", "Adicionar Create, Read, Update, Delete", 2, false);
 
-        // READ: buscar tarefa por ID
-        Task encontrada = manager.findTaskById(2);
-        if (encontrada != null) {
-            System.out.println("Tarefa encontrada: " + encontrada.getTitle());
+        if (atualizado) {
+            System.out.println("Tarefa 2 atualizada com sucesso!");
         }
+
+        // Listando tarefas após atualização
+        manager.listTasks().forEach(t ->
+                System.out.println("ID: " + t.getId() + " | Título: " + t.getTitle() + " | Prioridade: " + t.getPriority())
+        );
     }
 }
