@@ -12,9 +12,9 @@ public class Main {
         }
 
         // Teste com dados inválidos
-        manager.addTask(new Task(-1, "", "abc")); // deve falhar
+        manager.addTask(new Task(-1, "", "abc",0)); // deve falhar
 
         // Teste com dados válidos
-        manager.addTask(new Task(1, "Configurar CI", "Criar pipeline no GitHub Actions"));
+        manager.addTask(new Task(1, "Configurar CI", "Criar pipeline no GitHub Actions", 0));
     }
 }
