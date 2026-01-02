@@ -3,9 +3,11 @@ name: Java CI
 # Dispara o workflow em push ou pull request
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - '**'   # roda em qualquer branch
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - '**'   # roda em qualquer branch
 
 jobs:
   build:
