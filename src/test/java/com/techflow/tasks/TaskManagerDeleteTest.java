@@ -20,6 +20,7 @@ public class TaskManagerDeleteTest {
     @Test
     public void testDeleteTaskNotFound() {
         TaskManager manager = new TaskManager();
+        manager.authenticate(true); // necessário
         boolean removida = manager.deleteTask(99);
         assertFalse(removida);
     }

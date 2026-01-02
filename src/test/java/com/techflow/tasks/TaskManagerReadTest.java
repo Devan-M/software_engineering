@@ -8,6 +8,7 @@ public class TaskManagerReadTest {
     @Test
     public void testListTasks() {
         TaskManager manager = new TaskManager();
+        manager.authenticate(true); // necessário
         manager.addTask(new Task(1, "Teste 1", "Descrição 1"));
         manager.addTask(new Task(2, "Teste 2", "Descrição 2"));
 
