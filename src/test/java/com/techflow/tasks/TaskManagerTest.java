@@ -1,18 +1,23 @@
 package com.techflow.tasks;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TaskManagerTest {
+@SpringBootTest
+class TaskManagerCreateTest {
+
+    @Autowired
+    private TaskRepository repository;
 
     @Test
-    public void testAddTask() {
-        TaskManager manager = new TaskManager();
-        manager.authenticate(true); // habilita CRUD
+    void testCreateTask() {
+        Task task = new Task("Estudar Spring", "Aprender JPA e H2", 3);
+        Task saved = repository.save(task);
 
-        Task task = new Task(1, "Teste", "Descrição da tarefa", 1);
-        manager.addTask(task);
-
-        assertEquals(1, manager.listTasks().size());
+        assertNotNull(saved.getId()); // ID gerado pelo banco
+        assertEquals("Estudar Spring", saved.getTitle());
     }
 }

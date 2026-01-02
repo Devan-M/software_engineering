@@ -1,21 +1,36 @@
 package com.techflow.tasks;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LoginServiceTest {
+@SpringBootTest
+@Transactional
+class LoginServiceTest {
+
+    @Autowired
+    private LoginService loginService;
 
     @Test
-    public void testRegisterAndLoginSuccess() {
-        LoginService service = new LoginService();
-        service.register("user", "pass");
-        assertTrue(service.login("user", "pass"));
+    void testRegisterAndLoginSuccess() {
+        // registra o usuário
+        boolean registered = loginService.register("user", "pass");
+        assertTrue(registered);
+
+        // tenta logar com a mesma senha
+        boolean loggedIn = loginService.login("user", "pass");
+        assertTrue(loggedIn);
     }
 
     @Test
-    public void testLoginFail() {
-        LoginService service = new LoginService();
-        service.register("user", "pass");
-        assertFalse(service.login("user", "wrong"));
+    void testLoginFail() {
+        // registra o usuário
+        loginService.register("user", "pass");
+
+        // tenta logar com senha incorreta
+        assertFalse(loginService.login("user", "wrong"));
     }
 }

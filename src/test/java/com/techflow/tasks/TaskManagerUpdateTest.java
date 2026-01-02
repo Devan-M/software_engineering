@@ -1,33 +1,25 @@
 package com.techflow.tasks;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TaskManagerUpdateTest {
+@SpringBootTest
+class TaskManagerUpdateTest {
+
+    @Autowired
+    private TaskRepository repository;
 
     @Test
-    public void testUpdateTask() {
-        TaskManager manager = new TaskManager();
-        manager.authenticate(true);
+    void testUpdateTask() {
+        Task task = new Task("Estudar", "Spring Boot básico", 1);
+        Task saved = repository.save(task);
 
-        manager.addTask(new Task(1, "Teste", "Descrição", 0));
+        saved.setDescription("Spring Boot avançado");
+        Task updated = repository.save(saved);
 
-        boolean atualizado = manager.updateTask(1, "Novo título", "Nova descrição", 2, true);
-
-        assertTrue(atualizado);
-        Task task = manager.findTaskById(1);
-        assertEquals("Novo título", task.getTitle());
-        assertEquals("Nova descrição", task.getDescription());
-        assertEquals(2, task.getPriority());
-        assertTrue(task.isCompleted());
-    }
-
-    @Test
-    public void testUpdateTaskNotFound() {
-        TaskManager manager = new TaskManager();
-        manager.authenticate(true);
-
-        boolean atualizado = manager.updateTask(99, "Título", "Descrição", 1, false);
-        assertFalse(atualizado);
+        assertEquals("Spring Boot avançado", updated.getDescription());
     }
 }

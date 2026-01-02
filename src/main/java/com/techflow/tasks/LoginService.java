@@ -1,28 +1,32 @@
 package com.techflow.tasks;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class LoginService {
-    private Map<String, String> users = new HashMap<>();
 
-    // Registrar novo usuário
-    public void register(String username, String password) {
-        if (users.containsKey(username)) {
-            System.out.println("Usuário já existe!");
-        } else {
-            users.put(username, password);
-            System.out.println("Usuário registrado com sucesso: " + username);
-        }
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    public LoginService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    // Autenticar usuário
-    public boolean login(String username, String password) {
-        if (users.containsKey(username) && users.get(username).equals(password)) {
-            System.out.println("Login realizado com sucesso!");
-            return true;
+    public boolean register(String username, String password) {
+        if (userRepository.findByUsername(username) != null) {
+            return false; // usuário já existe
         }
-        System.out.println("Falha no login. Verifique usuário e senha.");
-        return false;
+        String hashedPassword = passwordEncoder.encode(password);
+        userRepository.save(new User(username, hashedPassword));
+        return true;
+    }
+
+    public boolean login(String username, String password) {
+        User user = userRepository.findByUsername(username);
+        return user != null && passwordEncoder.matches(password, user.getPassword());
     }
 }

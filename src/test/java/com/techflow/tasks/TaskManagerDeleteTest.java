@@ -1,29 +1,24 @@
 package com.techflow.tasks;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TaskManagerDeleteTest {
+@SpringBootTest
+class TaskManagerDeleteTest {
+
+    @Autowired
+    private TaskRepository repository;
 
     @Test
-    public void testDeleteTask() {
-        TaskManager manager = new TaskManager();
-        manager.authenticate(true);
+    void testDeleteTask() {
+        Task task = new Task("Apagar tarefa", "Teste de delete", 1);
+        Task saved = repository.save(task);
 
-        Task task = new Task(1, "Teste", "Descrição", 1);
-        manager.addTask(task);
+        repository.deleteById(saved.getId());
 
-        boolean removida = manager.deleteTask(1);
-        assertTrue(removida);
-        assertEquals(0, manager.listTasks().size());
-    }
-
-    @Test
-    public void testDeleteTaskNotFound() {
-        TaskManager manager = new TaskManager();
-        manager.authenticate(true);
-
-        boolean removida = manager.deleteTask(99);
-        assertFalse(removida);
+        assertFalse(repository.findById(saved.getId()).isPresent());
     }
 }

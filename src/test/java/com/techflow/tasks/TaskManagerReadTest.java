@@ -1,31 +1,25 @@
 package com.techflow.tasks;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TaskManagerReadTest {
+@SpringBootTest
+class TaskManagerReadTest {
+
+    @Autowired
+    private TaskRepository repository;
 
     @Test
-    public void testListTasks() {
-        TaskManager manager = new TaskManager();
-        manager.authenticate(true);
+    void testFindTaskById() {
+        Task task = new Task("Fazer commit", "Fechar issue #11", 2);
+        Task saved = repository.save(task);
 
-        manager.addTask(new Task(1, "Teste 1", "Descrição 1", 0));
-        manager.addTask(new Task(2, "Teste 2", "Descrição 2", 2));
+        Task found = repository.findById(saved.getId()).orElse(null);
 
-        assertEquals(2, manager.listTasks().size());
-    }
-
-    @Test
-    public void testFindTaskById() {
-        TaskManager manager = new TaskManager();
-        manager.authenticate(true);
-
-        Task task = new Task(1, "Teste", "Descrição", 1);
-        manager.addTask(task);
-
-        Task encontrada = manager.findTaskById(1);
-        assertNotNull(encontrada);
-        assertEquals("Teste", encontrada.getTitle());
+        assertNotNull(found);
+        assertEquals("Fazer commit", found.getTitle());
     }
 }

@@ -1,79 +1,372 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Gerenciador de Tarefas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1 { color: #2c3e50; }
-        form { margin-bottom: 20px; }
-        input, textarea, select { margin: 5px; padding: 5px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
-        th { background-color: #f4f4f4; }
-        button { margin: 5px; }
+        :root {
+          --bg: #0f172a;
+          --card: #111827;
+          --text: #e5e7eb;
+          --muted: #9ca3af;
+          --primary: #6366f1;
+          --primary-2: #7c3aed;
+          --danger: #ef4444;
+          --success: #10b981;
+          --border: #1f2937;
+        }
+        * { box-sizing: border-box; }
+        body {
+          margin: 0;
+          font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+          background: radial-gradient(1200px 600px at 10% 10%, #1f2937 0%, #0f172a 60%, #0b1220 100%);
+          color: var(--text);
+          min-height: 100vh;
+          display: grid;
+          place-items: center;
+          padding: 24px;
+        }
+        .container {
+          width: 100%;
+          max-width: 980px;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 24px;
+        }
+        .card {
+          background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+          border: 1px solid var(--border);
+          border-radius: 16px;
+          padding: 24px;
+          backdrop-filter: blur(6px);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+        }
+        .title {
+          margin: 0 0 12px;
+          font-weight: 700;
+          letter-spacing: 0.2px;
+        }
+        .subtitle {
+          margin: 0 0 20px;
+          color: var(--muted);
+          font-size: 14px;
+        }
+        .field {
+          display: grid;
+          gap: 8px;
+          margin-bottom: 14px;
+        }
+        .field label {
+          font-size: 13px;
+          color: var(--muted);
+        }
+        .input, .select, .textarea {
+          width: 100%;
+          padding: 12px 14px;
+          border-radius: 10px;
+          border: 1px solid var(--border);
+          background: #0b1220;
+          color: var(--text);
+          outline: none;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .input:focus, .select:focus, .textarea:focus {
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+        }
+        .textarea { min-height: 90px; resize: vertical; }
+        .btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 12px 16px;
+          border-radius: 10px;
+          border: 1px solid var(--border);
+          background: linear-gradient(180deg, #1f2937, #111827);
+          color: var(--text);
+          cursor: pointer;
+          transition: transform 0.05s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+        .btn:hover { box-shadow: 0 10px 24px rgba(0,0,0,0.35); }
+        .btn:active { transform: translateY(1px); }
+        .btn-primary {
+          background: linear-gradient(180deg, var(--primary), var(--primary-2));
+          border: none;
+        }
+        .btn-danger {
+          background: linear-gradient(180deg, #ef4444, #b91c1c);
+          border: none;
+        }
+        .btn-success {
+          background: linear-gradient(180deg, #10b981, #047857);
+          border: none;
+        }
+        .row {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+        .hidden { display: none; }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 12px;
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          overflow: hidden;
+        }
+        thead th {
+          text-align: left;
+          padding: 12px;
+          background: #0b1220;
+          border-bottom: 1px solid var(--border);
+          font-weight: 600;
+          color: var(--muted);
+        }
+        tbody td {
+          padding: 12px;
+          border-bottom: 1px solid var(--border);
+          vertical-align: top;
+        }
+        .badge {
+          display: inline-block;
+          padding: 6px 10px;
+          border-radius: 999px;
+          font-size: 12px;
+          border: 1px solid var(--border);
+          background: #0b1220;
+          color: var(--text);
+        }
+        .badge.low { color: #60a5fa; border-color: #1e3a8a; }
+        .badge.mid { color: #f59e0b; border-color: #7c2d12; }
+        .badge.high { color: #ef4444; border-color: #7f1d1d; }
+        .status {
+          font-weight: 600;
+          color: var(--muted);
+        }
+        .status.done { color: #10b981; }
+        .status.todo { color: #ef4444; }
+        .spacer { height: 8px; }
+        @media (max-width: 900px) {
+          .container { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-<h1>Gerenciador de Tarefas</h1>
+<div class="container">
+    <!-- Card de autenticação -->
+    <div class="card" id="authCard">
+        <h2 class="title">Acesso</h2>
+        <p class="subtitle">Registre-se ou faça login para gerenciar suas tarefas.</p>
 
-<!-- Formulário para adicionar tarefa -->
-<form id="taskForm">
-    <input type="number" id="taskId" placeholder="ID" required>
-    <input type="text" id="taskTitle" placeholder="Título" required>
-    <textarea id="taskDescription" placeholder="Descrição" required></textarea>
-    <select id="taskPriority">
-        <option value="0">Baixa</option>
-        <option value="1">Média</option>
-        <option value="2">Alta</option>
-    </select>
-    <button type="submit">Adicionar Tarefa</button>
-</form>
+        <form id="registerForm">
+            <div class="field">
+                <label for="registerUsername">Usuário</label>
+                <input class="input" id="registerUsername" type="text" placeholder="Seu usuário" required />
+            </div>
+            <div class="field">
+                <label for="registerPassword">Senha</label>
+                <input class="input" id="registerPassword" type="password" placeholder="Sua senha" required />
+            </div>
+            <div class="row">
+                <button class="btn btn-success" type="submit">Registrar</button>
+            </div>
+        </form>
 
-<!-- Lista de tarefas -->
-<table id="taskTable">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Título</th>
-        <th>Descrição</th>
-        <th>Prioridade</th>
-        <th>Ações</th>
-    </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+        <div class="spacer"></div>
+        <hr style="border-color: var(--border);" />
+        <div class="spacer"></div>
+
+        <form id="loginForm">
+            <div class="field">
+                <label for="loginUsername">Usuário</label>
+                <input class="input" id="loginUsername" type="text" placeholder="Seu usuário" required />
+            </div>
+            <div class="field">
+                <label for="loginPassword">Senha</label>
+                <input class="input" id="loginPassword" type="password" placeholder="Sua senha" required />
+            </div>
+            <div class="row">
+                <button class="btn btn-primary" type="submit">Login</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Card de tarefas -->
+    <div class="card hidden" id="taskCard">
+        <h2 class="title">Tarefas</h2>
+        <p class="subtitle">Adicione, conclua e gerencie suas tarefas.</p>
+
+        <form id="taskForm">
+            <div class="field">
+                <label for="taskTitle">Título</label>
+                <input class="input" id="taskTitle" type="text" placeholder="Ex.: Estudar Spring Boot" required />
+            </div>
+            <div class="field">
+                <label for="taskDescription">Descrição</label>
+                <textarea class="textarea" id="taskDescription" placeholder="Detalhes da tarefa" required></textarea>
+            </div>
+            <div class="field">
+                <label for="taskPriority">Prioridade</label>
+                <select class="select" id="taskPriority">
+                    <option value="0">Baixa</option>
+                    <option value="1">Média</option>
+                    <option value="2">Alta</option>
+                </select>
+            </div>
+            <div class="row">
+                <button class="btn btn-success" type="submit">Adicionar tarefa</button>
+                <button class="btn" type="button" id="logoutBtn">Sair</button>
+            </div>
+        </form>
+
+        <table id="taskTable">
+            <thead>
+            <tr>
+                <th style="width: 60px;">ID</th>
+                <th style="width: 180px;">Título</th>
+                <th>Descrição</th>
+                <th style="width: 120px;">Prioridade</th>
+                <th style="width: 120px;">Status</th>
+                <th style="width: 220px;">Ações</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
 
 <script>
-    const form = document.getElementById('taskForm');
-    const tableBody = document.querySelector('#taskTable tbody');
-    let tasks = [];
+    // Endpoints
+    const API_AUTH = "http://localhost:8080/auth";
+    const API_TASKS = "http://localhost:8080/tasks";
 
-    // Adicionar tarefa
-    form.addEventListener('submit', e => {
+    // Elementos
+    const authCard = document.getElementById("authCard");
+    const taskCard = document.getElementById("taskCard");
+    const tableBody = document.querySelector("#taskTable tbody");
+
+    // Estado simples (se seu backend usar token, armazene aqui)
+    let isLoggedIn = false;
+
+    // Helpers
+    const priorityLabel = (p) => {
+      if (p === 2 || p === "2") return '<span class="badge high">Alta</span>';
+      if (p === 1 || p === "1") return '<span class="badge mid">Média</span>';
+      return '<span class="badge low">Baixa</span>';
+    };
+    const statusLabel = (c) => c ? '<span class="status done">Concluída</span>' : '<span class="status todo">Pendente</span>';
+
+    // Registro
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const id = document.getElementById('taskId').value;
-      const title = document.getElementById('taskTitle').value;
-      const description = document.getElementById('taskDescription').value;
-      const priority = document.getElementById('taskPriority').value;
+      const username = document.getElementById("registerUsername").value.trim();
+      const password = document.getElementById("registerPassword").value.trim();
 
-      tasks.push({ id, title, description, priority });
-      renderTasks();
-      form.reset();
+      try {
+        const res = await fetch(`${API_AUTH}/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+        const msg = await res.text();
+        alert(msg || "Registro realizado.");
+        e.target.reset();
+      } catch (err) {
+        alert("Erro ao registrar.");
+      }
     });
 
-    // Renderizar lista de tarefas
-    function renderTasks() {
-      tableBody.innerHTML = '';
-      tasks.forEach((task, index) => {
-        const row = document.createElement('tr');
+    // Login
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("loginUsername").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+
+      try {
+        const res = await fetch(`${API_AUTH}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+
+        if (!res.ok) {
+          alert("Falha no login. Verifique usuário e senha.");
+          return;
+        }
+
+        // Se seu backend retornar token, você pode salvar aqui:
+        // const data = await res.json(); localStorage.setItem("token", data.token);
+        isLoggedIn = true;
+        authCard.classList.add("hidden");
+        taskCard.classList.remove("hidden");
+        await loadTasks();
+      } catch (err) {
+        alert("Erro ao fazer login.");
+      }
+    });
+
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      isLoggedIn = false;
+      // localStorage.removeItem("token");
+      taskCard.classList.add("hidden");
+      authCard.classList.remove("hidden");
+      tableBody.innerHTML = "";
+    });
+
+    // Carregar tarefas
+    async function loadTasks() {
+      try {
+        const res = await fetch(API_TASKS);
+        const data = await res.json();
+        renderTasks(data);
+      } catch (err) {
+        alert("Erro ao carregar tarefas.");
+      }
+    }
+
+    // Adicionar tarefa
+    document.getElementById("taskForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const title = document.getElementById("taskTitle").value.trim();
+      const description = document.getElementById("taskDescription").value.trim();
+      const priority = parseInt(document.getElementById("taskPriority").value, 10);
+
+      try {
+        await fetch(API_TASKS, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, description, priority, completed: false })
+        });
+        e.target.reset();
+        await loadTasks();
+      } catch (err) {
+        alert("Erro ao adicionar tarefa.");
+      }
+    });
+
+    // Renderizar tarefas
+    function renderTasks(tasks) {
+      tableBody.innerHTML = "";
+      tasks.forEach((task) => {
+        const row = document.createElement("tr");
         row.innerHTML = `
           <td>${task.id}</td>
-          <td>${task.title}</td>
-          <td>${task.description}</td>
-          <td>${task.priority}</td>
+          <td>${escapeHtml(task.title)}</td>
+          <td>${escapeHtml(task.description)}</td>
+          <td>${priorityLabel(task.priority)}</td>
+          <td>${statusLabel(task.completed)}</td>
           <td>
-            <button onclick="deleteTask(${index})">Excluir</button>
+            <div class="row">
+              <button class="btn btn-danger" onclick="deleteTask(${task.id})">Excluir</button>
+              <button class="btn btn-primary" onclick="toggleCompleted(${task.id}, ${task.completed})">
+                ${task.completed ? "Desmarcar" : "Concluir"}
+              </button>
+            </div>
           </td>
         `;
         tableBody.appendChild(row);
@@ -81,10 +374,41 @@
     }
 
     // Excluir tarefa
-    function deleteTask(index) {
-      tasks.splice(index, 1);
-      renderTasks();
+    async function deleteTask(id) {
+      try {
+        await fetch(`${API_TASKS}/${id}`, { method: "DELETE" });
+        await loadTasks();
+      } catch (err) {
+        alert("Erro ao excluir tarefa.");
+      }
     }
+
+    // Alternar concluída (PATCH com DTO CompletedDTO no backend)
+    async function toggleCompleted(id, completed) {
+      try {
+        await fetch(`${API_TASKS}/${id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ completed: !completed })
+        });
+        await loadTasks();
+      } catch (err) {
+        alert("Erro ao atualizar tarefa.");
+      }
+    }
+
+    // Util: escapar HTML simples
+    function escapeHtml(str) {
+      if (str == null) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    // Expor funções no escopo global (para onclick)
+    window.deleteTask = deleteTask;
+    window.toggleCompleted = toggleCompleted;
 </script>
 </body>
 </html>

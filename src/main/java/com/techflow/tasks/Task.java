@@ -1,21 +1,30 @@
 package com.techflow.tasks;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+
+@Entity
 public class Task {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String title;
     private String description;
     private int priority;
     private boolean completed;
 
-    public Task(int id, String title, String description, int priority) {
-        this.id = id;
+    public Task() {} // construtor vazio para JPA e JSON
+
+    public Task(String title, String description, int priority) {
         this.title = title;
         this.description = description;
         this.priority = priority;
         this.completed = false;
     }
-
-    public Task() {} // construtor vazio para JSON
 
     // Getters e Setters
     public int getId() { return id; }

@@ -7,40 +7,46 @@ import java.util.List;
 @RequestMapping("/tasks")
 public class TaskController {
 
-    private final TaskManager manager = new TaskManager();
+    private final TaskRepository repository;
 
-    public TaskController() {
-        manager.authenticate(true); // habilita CRUD
+    public TaskController(TaskRepository repository) {
+        this.repository = repository;
     }
 
     @PostMapping
-    public boolean addTask(@RequestBody Task task) {
-        return manager.addTask(task);
+    public Task addTask(@RequestBody Task task) {
+        return repository.save(task);
     }
 
     @GetMapping
     public List<Task> listTasks() {
-        return manager.listTasks();
+        return repository.findAll();
     }
 
     @GetMapping("/{id}")
     public Task findTask(@PathVariable int id) {
-        return manager.findTaskById(id);
+        return repository.findById(id).orElse(null);
     }
 
     @PutMapping("/{id}")
-    public boolean updateTask(@PathVariable int id, @RequestBody Task task) {
-        return manager.updateTask(id, task.getTitle(), task.getDescription(),
-                task.getPriority(), task.isCompleted());
+    public Task updateTask(@PathVariable int id, @RequestBody Task task) {
+        if (repository.existsById(id)) {
+            task.setId(id);
+            return repository.save(task);
+        }
+        return null;
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteTask(@PathVariable int id) {
-        return manager.deleteTask(id);
+    public void deleteTask(@PathVariable int id) {
+        repository.deleteById(id);
     }
 
-    @GetMapping("/")
-    public String home() {
-        return "API de Gerenciamento de Tarefas está rodando!";
+    @PatchMapping("/{id}")
+    public Task updateCompleted(@PathVariable int id, @RequestBody CompletedDTO dto) {
+        return repository.findById(id).map(task -> {
+            task.setCompleted(dto.isCompleted());
+            return repository.save(task);
+        }).orElse(null);
     }
 }
