@@ -17,6 +17,7 @@ public class TaskManagerReadTest {
     @Test
     public void testFindTaskById() {
         TaskManager manager = new TaskManager();
+        manager.authenticate(true); // necessário
         Task task = new Task(1, "Teste", "Descrição");
         manager.addTask(task);
 

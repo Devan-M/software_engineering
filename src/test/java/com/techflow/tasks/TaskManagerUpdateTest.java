@@ -8,6 +8,7 @@ public class TaskManagerUpdateTest {
     @Test
     public void testUpdateTask() {
         TaskManager manager = new TaskManager();
+        manager.authenticate(true); // necessário
         manager.addTask(new Task(1, "Teste", "Descrição"));
 
         boolean atualizado = manager.updateTask(1, "Novo título", "Nova descrição", 3, true);

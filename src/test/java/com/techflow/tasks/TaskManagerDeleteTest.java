@@ -8,6 +8,7 @@ public class TaskManagerDeleteTest {
     @Test
     public void testDeleteTask() {
         TaskManager manager = new TaskManager();
+        manager.authenticate(true); // necessário
         Task task = new Task(1, "Teste", "Descrição");
         manager.addTask(task);
 
