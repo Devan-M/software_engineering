@@ -8,8 +8,9 @@ public class TaskManagerDeleteTest {
     @Test
     public void testDeleteTask() {
         TaskManager manager = new TaskManager();
-        manager.authenticate(true); // necessário
-        Task task = new Task(1, "Teste", "Descrição");
+        manager.authenticate(true);
+
+        Task task = new Task(1, "Teste", "Descrição", 1);
         manager.addTask(task);
 
         boolean removida = manager.deleteTask(1);
@@ -20,7 +21,8 @@ public class TaskManagerDeleteTest {
     @Test
     public void testDeleteTaskNotFound() {
         TaskManager manager = new TaskManager();
-        manager.authenticate(true); // necessário
+        manager.authenticate(true);
+
         boolean removida = manager.deleteTask(99);
         assertFalse(removida);
     }

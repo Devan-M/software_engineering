@@ -5,17 +5,45 @@ import java.util.List;
 
 public class TaskManager {
     private List<Task> tasks = new ArrayList<>();
-    private boolean authenticated = false; // controle de login
+    private boolean authenticated = false;
 
-    // Método para autenticar
     public void authenticate(boolean status) {
         this.authenticated = status;
+    }
+
+    // Validação de entradas
+    private boolean validateTask(Task task) {
+        if (task.getId() <= 0) {
+            System.out.println("Erro: ID deve ser positivo.");
+            return false;
+        }
+        if (task.getTitle() == null || task.getTitle().trim().isEmpty()) {
+            System.out.println("Erro: título não pode ser vazio.");
+            return false;
+        }
+        if (task.getDescription() == null || task.getDescription().length() < 5) {
+            System.out.println("Erro: descrição deve ter pelo menos 5 caracteres.");
+            return false;
+        }
+        if (task.getPriority() < 0 || task.getPriority() > 2) {
+            System.out.println("Erro: prioridade inválida (use 0, 1 ou 2).");
+            return false;
+        }
+        // Verifica se já existe uma tarefa com o mesmo ID
+        if (findTaskById(task.getId()) != null) {
+            System.out.println("Erro: já existe uma tarefa com esse ID.");
+            return false;
+        }
+        return true;
     }
 
     // CREATE
     public boolean addTask(Task task) {
         if (!authenticated) {
             System.out.println("Acesso negado! Faça login para criar tarefas.");
+            return false;
+        }
+        if (!validateTask(task)) {
             return false;
         }
         tasks.add(task);
@@ -42,15 +70,29 @@ public class TaskManager {
             return false;
         }
         Task task = findTaskById(id);
-        if (task != null) {
-            task.setTitle(newTitle);
-            task.setDescription(newDescription);
-            task.setPriority(newPriority);
-            task.setCompleted(completed);
-            System.out.println("Tarefa atualizada: " + task.getTitle());
-            return true;
+        if (task == null) {
+            System.out.println("Erro: tarefa não encontrada.");
+            return false;
         }
-        return false;
+        if (newTitle == null || newTitle.trim().isEmpty()) {
+            System.out.println("Erro: título não pode ser vazio.");
+            return false;
+        }
+        if (newDescription == null || newDescription.length() < 5) {
+            System.out.println("Erro: descrição deve ter pelo menos 5 caracteres.");
+            return false;
+        }
+        if (newPriority < 0 || newPriority > 2) {
+            System.out.println("Erro: prioridade inválida.");
+            return false;
+        }
+
+        task.setTitle(newTitle);
+        task.setDescription(newDescription);
+        task.setPriority(newPriority);
+        task.setCompleted(completed);
+        System.out.println("Tarefa atualizada: " + task.getTitle());
+        return true;
     }
 
     // DELETE
@@ -65,6 +107,7 @@ public class TaskManager {
             System.out.println("Tarefa removida: " + task.getTitle());
             return true;
         }
+        System.out.println("Erro: tarefa não encontrada.");
         return false;
     }
 }

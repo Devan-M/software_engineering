@@ -3,20 +3,18 @@ package com.techflow.tasks;
 public class Main {
     public static void main(String[] args) {
         LoginService loginService = new LoginService();
-
-        // Registrar usuário
         loginService.register("admin", "1234");
 
-        // Tentativa de login
-        boolean autenticado = loginService.login("admin", "1234");
+        TaskManager manager = new TaskManager();
 
-        if (autenticado) {
-            TaskManager manager = new TaskManager();
-            manager.authenticate(true); // habilita CRUD
-
-            // Criar tarefa após login
-            manager.addTask(new Task(1, "Configurar CI", "Criar pipeline no GitHub Actions"));
-            manager.listTasks().forEach(t -> System.out.println("ID: " + t.getId() + " | " + t.getTitle()));
+        if (loginService.login("admin", "1234")) {
+            manager.authenticate(true);
         }
+
+        // Teste com dados inválidos
+        manager.addTask(new Task(-1, "", "abc")); // deve falhar
+
+        // Teste com dados válidos
+        manager.addTask(new Task(1, "Configurar CI", "Criar pipeline no GitHub Actions"));
     }
 }
