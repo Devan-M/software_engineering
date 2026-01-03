@@ -1,4 +1,6 @@
-package com.techflow.tasks;
+package com.techflow.tasks.service;
+
+import com.techflow.tasks.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,5 +1,8 @@
-package com.techflow.tasks;
+package com.techflow.tasks.controller;
 
+import com.techflow.tasks.dto.CompletedDTO;
+import com.techflow.tasks.model.Task;
+import com.techflow.tasks.repository.TaskRepository;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 

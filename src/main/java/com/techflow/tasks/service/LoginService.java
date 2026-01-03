@@ -1,5 +1,7 @@
-package com.techflow.tasks;
+package com.techflow.tasks.service;
 
+import com.techflow.tasks.model.User;
+import com.techflow.tasks.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

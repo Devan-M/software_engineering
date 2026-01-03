@@ -1,4 +1,4 @@
-package com.techflow.tasks;
+package com.techflow.tasks.dto;
 
 public class CompletedDTO {
     private boolean completed;

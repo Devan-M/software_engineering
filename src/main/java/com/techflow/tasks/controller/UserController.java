@@ -1,5 +1,7 @@
-package com.techflow.tasks;
+package com.techflow.tasks.controller;
 
+import com.techflow.tasks.model.User;
+import com.techflow.tasks.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

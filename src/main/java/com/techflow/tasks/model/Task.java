@@ -1,4 +1,4 @@
-package com.techflow.tasks;
+package com.techflow.tasks.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

@@ -1,5 +1,6 @@
-package com.techflow.tasks;
+package com.techflow.tasks.repository;
 
+import com.techflow.tasks.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
